@@ -1,0 +1,48 @@
+model Post {
+  id        String    @id @default(uuid())
+  title     String
+  content   String
+  image     String
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  groupId  String?        // optional foreign key
+  group    Group?  @relation(fields: [groupId], references: [id])
+  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now())
+  comments  Comment[]
+
+  likes     Like[]
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  
+  post      Post?    @relation(fields: [postId], references: [id])
+  postId    String?
+  
+  comment   Comment? @relation(fields: [commentId], references: [id])
+  commentId String?
+  
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+  @@unique([userId, commentId])
+}
+
+model Comment {
+  id            String    @id @default(cuid())
+  content       String
+  createdAt     DateTime  @default(now())
+  replyId       String?
+  userId        String
+  postId        String
+  post          Post      @relation(fields: [postId], references: [id])
+  comment       Comment?  @relation("CommentToComment", fields: [replyId], references: [id])
+  other_Comment Comment[] @relation("CommentToComment")
+  user          User      @relation(fields: [userId], references: [id])
+
+  likes     Like[]
+}

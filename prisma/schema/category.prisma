@@ -1,0 +1,19 @@
+model Category {
+  id        String       @id @default(uuid())
+  name      String
+  type      CategoryType
+  color     String?
+  desc      String?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  programs  Program[]
+  tags      Tag[]
+}
+
+enum CategoryType {
+  WORKOUT
+  DIET
+  EQUIPMENT
+  SUPPLEMENT
+  BLOG
+}

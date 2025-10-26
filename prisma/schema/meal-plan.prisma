@@ -1,0 +1,32 @@
+model Meal {
+  id           String   @id @default(uuid())
+  title        String
+  description  String?
+  image        String?
+  calories     Float?
+  protein      Float?
+  carbs        Float?
+  fat          Float?
+  vitamins     String[]       // e.g., "Vit A, Vit E, Omega 3"
+  ingredients  String[]      // list of ingredients
+  preparation  String[]      // list of steps
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  plans        Plan[] @relation("PlanMeals") // Many-to-Many relation
+}
+
+model Plan {
+  id             String   @id @default(uuid())
+  title          String
+  description    String?
+  goal           String?       // e.g., "Lean Muscle Gain"
+  intensityLevel String?       // e.g., "A-Mode", "Beginner"
+  proteinExample String?       // e.g., "Salmon Bowl, Chicken Breast"
+  mealExamples   String[]      // e.g., list of sample meals
+  image          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  meals          Meal[]   @relation("PlanMeals") // Many-to-Many relation
+  createdById    String?
+  createdBy      User?    @relation(fields: [createdById], references: [id])
+}

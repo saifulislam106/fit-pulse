@@ -1,0 +1,9 @@
+model Tag {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  categoryId String
+  color      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+}

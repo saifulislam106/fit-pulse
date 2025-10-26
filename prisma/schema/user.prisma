@@ -1,0 +1,128 @@
+model User {
+  id               String         @id  @default(uuid())
+  fullname         String
+  email            String?        @unique
+  phone            String?        @unique
+  password         String?
+  role             Role           @default(USER)
+  nationality      String?
+  city             String?
+  images           String?
+  gender           GENDER?
+  age              Float?
+  height           Float?
+  weight           Float?
+  userStatus       UserStatus     @default(Active)
+  heartCondition   Boolean?
+  chestPain        Boolean?
+  medication       Boolean?
+  hasInjuries      Boolean?
+  hasDizziness     Boolean?
+  hasSurgery       Boolean?
+  goals            Goals[]
+  trainingDays     TrainingDays?
+  signature        String?
+  date             DateTime?
+  areaOfService    String?
+  bio              String?
+  specializations  String[]
+  availability     Boolean?
+  sessionType      SessionType?
+  trainerStatus    TrainerStatus?
+  isPopular        Boolean?
+  resetToken       String?
+  resetTokenExpiry DateTime?
+  facebookId       String?
+  googleId         String?
+  isVerified       Boolean        @default(false)
+  isDeleted        Boolean        @default(false)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  resetOtp         String?
+  resetOtpExpiry   DateTime?
+  rate             Float?
+  otpVerified      Boolean?
+  comments         Comment[]
+  posts            Post[]
+  likes            Like[]
+  products         Product[]
+  cart             Cart[]
+  orders           Order[]
+  programs         Program[]
+  receivedReviews  Review[]       @relation("TrainerReviews")
+  givenReviews     Review[]       @relation("UserReviews")
+ 
+  groups  Group[]  @relation("UserGroups")
+  createdGroups   Group[]
+  
+
+  //  Socket
+  sentMessages     Message[]      @relation("SentMessages")
+  receivedMessages Message[]      @relation("ReceivedMessages")
+
+  createdChallenges Challenge[]   @relation("CreatedChallenges")
+  hostedChallenges  Challenge[]   @relation("HostedChallenges")
+
+
+
+
+
+
+  createdEvents         Event[]                @relation("EventCreator")
+  hostedEvents          Event[]                @relation("EventHost")
+  participations        EventParticipant[]
+  challengeProgress     ChallengeProgress[]
+  achievements          UserAchievement[]
+
+  commissionRate       TrainerCommissionRate?
+  preference           AdminPreference?
+
+  invitations          Invitation[]
+  plans                Plan[]
+
+  @@map("users")
+}
+
+enum UserStatus {
+  Active
+  Inactive
+  Suspended
+}
+
+enum TrainerStatus {
+  Approved
+  Pending
+  Rejected
+}
+
+enum Role {
+  USER
+  TRAINER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum GENDER {
+  Male
+  Female
+  Others
+}
+
+enum SessionType {
+  Online
+  Onsite
+}
+
+enum Goals {
+  Lose_Weight
+  Build_Muscle
+  Improve_Endurance
+  Gain_Flexibility
+  Improve_Overall_Health
+}
+
+enum TrainingDays {
+  One_To_Two_Days
+  Two_To_Three_Days
+  Daily
+}

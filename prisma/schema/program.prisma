@@ -1,0 +1,25 @@
+model Program {
+  id          String       @id @default(uuid())
+  name        String
+  description String
+  duration    String
+  thumbnail   String
+  trainerId   String
+  categoryId  String
+  createdAt   DateTime     @default(now())
+  category    Category     @relation(fields: [categoryId], references: [id])
+  user        User         @relation(fields: [trainerId], references: [id])
+  workoutDays WorkoutDay[]
+}
+
+model WorkoutDay {
+  id        String   @id @default(uuid())
+  dayNumber Int
+  exercises String[]
+  sets      Int
+  reps      Int
+  duration  String?
+  videoUrl  String?
+  programId String
+  program   Program  @relation(fields: [programId], references: [id])
+}

@@ -1,0 +1,22 @@
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  CANCELED
+  REJECTED
+  EXPIRED
+}
+
+model Invitation {
+  id            String          @id @default(cuid())
+  email         String
+  invitedByUser User            @relation(fields: [invitedById], references: [id])
+  invitedById   String
+
+  role          Role
+  status        InvitationStatus @default(PENDING)
+  token         String          @unique
+  expiresAt     DateTime
+  createdAt     DateTime        @default(now())
+  
+  @@unique([email, role, status])
+}

@@ -1,0 +1,11 @@
+model AdminPreference {
+  id         String      @id @default(cuid())
+  userId     String      @unique
+  theme      String      @default("system")
+  language   String      @default("English")
+  timeZone   String      @default("UTC")
+  dateFormat String      @default("MM/DD/YYYY")
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}

@@ -1,0 +1,97 @@
+enum EventType {
+  EVENT
+  CHALLENGE
+}
+
+enum EventFormat {
+  ONLINE
+  ONSITE
+  HYBRID
+}
+
+enum EventStatus {
+  DRAFT
+  UPCOMING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  ENDED
+}
+
+enum ParticipantStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  JOINED
+  COMPLETED
+  WITHDRAWN
+}
+
+model Event {
+  id                    String                 @id @default(uuid())
+  title                 String
+  description           String                 @db.Text
+  type                  EventType
+  format                EventFormat
+  status                EventStatus            @default(DRAFT)
+  
+  country               String?
+  city                  String?
+  addressLine1          String?
+  addressLine2          String?
+  
+  maxParticipants       Int
+  currentParticipants   Int                    @default(0)
+  
+  startDate             DateTime
+  endDate               DateTime
+  registrationDeadline  DateTime?
+  
+  coverImage            String?
+  images                String[]               @default([])
+  
+  creatorId             String
+  creator               User                   @relation("EventCreator", fields: [creatorId], references: [id])
+  hostId                String?
+  host                  User?                  @relation("EventHost", fields: [hostId], references: [id])
+  
+  challengeCategory     ChallengeCategory?
+  targetValue           Float?                 // e.g., 10000 steps, 30 days
+  targetUnit            String?                // e.g., "steps", "days", "minutes"
+  
+  badgeName             String?
+  badgeIcon             String?
+  
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  
+  participants          EventParticipant[]
+  challengeProgress     ChallengeProgress[]
+  
+  @@map("events")
+}
+
+model EventParticipant {
+  id                    String                 @id @default(uuid())
+  
+  userId                String
+  user                  User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  eventId               String
+  event                 Event                  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  
+  status                ParticipantStatus      @default(PENDING)
+  
+  joinedAt              DateTime               @default(now())
+  completedAt           DateTime?
+  withdrawnAt           DateTime?
+  
+  approvedBy            String?
+  approvedAt            DateTime?
+  rejectionReason       String?
+  
+  updatedAt             DateTime               @updatedAt
+  
+  @@unique([userId, eventId])
+  @@map("event_participants")
+}
